@@ -59,6 +59,36 @@ This configuration provides a foundation for scaling the application as demand c
 
 Distributing resources across two Availability Zones also helps improve availability by reducing the impact of an individual Availability Zone failure.
 
+## CloudWatch Monitoring and Automatic Scaling
+
+The CloudFormation template includes an Amazon CloudWatch alarm and an EC2 Auto Scaling scale-out policy.
+
+The CloudWatch alarm was configured with the following settings:
+
+* Metric: CPUUtilization
+* Threshold: Greater than 70%
+* Evaluation period: 300 seconds (5 minutes)
+* Statistic: Average
+
+## The Auto Scaling policy was configured with:
+
+* Scaling type: Simple Scaling
+* Scaling adjustment: +1 EC2 instance
+* Cooldown period: 300 seconds (5 minutes)
+* Maximum Auto Scaling Group capacity: 3 instances
+
+## How Automatic Scaling Works
+
+1. Amazon CloudWatch monitors the configured CPU utilisation metric.
+2. If the metric exceeds 70% for the configured evaluation period, the CloudWatch alarm can enter the ALARM state.
+3. The alarm triggers the EC2 Auto Scaling scale-out policy.
+4. The scaling policy requests an increase of one EC2 instance, subject to the Auto Scaling Group’s maximum capacity.
+5. The Auto Scaling Group launches an additional instance using the EC2 Launch Template when increased capacity is required and permitted.
+
+This configuration demonstrates how CloudWatch monitoring and EC2 Auto Scaling policies can work together to support automatic infrastructure scaling.
+
+Note: The scaling configuration was defined in CloudFormation, but a CPU load test was not performed to demonstrate the scaling policy being triggered.
+
 ## Deployment Process
 
 I used AWS CloudFormation to provision the infrastructure through Infrastructure as Code (IaC), rather than manually creating each resource in the AWS Management Console.
@@ -209,5 +239,148 @@ This provided additional verification that the EC2 instances had been successful
 
 ![EC2 Instance Verification](screenshots/4.jpeg)
 
+
+## Challenges and Troubleshooting
+
+During this project, I encountered several challenges while deploying the infrastructure using AWS CloudFormation.
+
+These challenges provided valuable opportunities to develop my troubleshooting skills and improve my understanding of Infrastructure as Code (IaC).
+
+## 1. CloudFormation Deployment Failures
+
+During the deployment process, the CloudFormation stack failed multiple times due to configuration issues within the YAML template.
+
+I investigated these failures, reviewed the infrastructure configuration, and made adjustments before attempting further deployments.
+
+This helped me understand the importance of troubleshooting infrastructure deployments systematically rather than simply assuming the template would work as expected.
+
+## 2. YAML Syntax and Indentation Issues
+
+One of the challenges I encountered involved YAML indentation and formatting.
+
+Because YAML relies on consistent indentation to define its structure, incorrect spacing can prevent CloudFormation from interpreting a template correctly.
+
+I reviewed and corrected indentation issues within the template to resolve configuration errors.
+
+This reinforced the importance of writing structured, readable, and correctly formatted Infrastructure as Code.
+
+## 3. Adapting Older Training Materials
+
+The project was initially based on training materials created approximately two years earlier.
+
+While following the deployment instructions, I encountered differences between the configurations demonstrated in the training materials and the AWS environment I was using.
+
+To address these differences, I reviewed and modified sections of the CloudFormation YAML template.
+
+This involved adding, removing, and updating configuration elements to support the deployment.
+
+The experience reinforced the importance of understanding the purpose of infrastructure configurations rather than relying exclusively on step-by-step instructions.
+
+## 4. Iterative Troubleshooting and Deployment
+
+Resolving the deployment issues required multiple attempts.
+
+My troubleshooting process involved:
+
+* Reviewing CloudFormation deployment failures.
+* Identifying potential YAML syntax and configuration problems.
+* Correcting indentation and updating resource definitions.
+* Reattempting the CloudFormation deployment.
+* Using the AWS CLI to verify the infrastructure after successful deployment.
+
+Through this process, I gained practical experience troubleshooting Infrastructure as Code and validating deployed AWS resources.
+
+## 5. Successful Deployment and Verification
+
+After resolving the configuration issues, the CloudFormation stack successfully reached CREATE_COMPLETE.
+
+I subsequently verified that the EC2 Auto Scaling Group had provisioned two instances.
+
+Both instances were reported as InService and Healthy, and additional AWS CLI checks confirmed that they were running.
+
+This demonstrated the value of persistence, systematic troubleshooting, and verifying infrastructure after deployment.
+
+
+## Lessons Learned
+
+Completing this project strengthened my understanding of AWS CloudFormation, EC2 Auto Scaling, Infrastructure as Code (IaC), and cloud infrastructure troubleshooting.
+
+The experience also helped me develop practical skills in deploying, configuring, and verifying AWS resources using YAML templates and the AWS CLI.
+
+## 1. Infrastructure as Code (IaC)
+
+I gained practical experience using AWS CloudFormation to define and provision infrastructure through a YAML template.
+
+This helped me understand how infrastructure can be deployed consistently through code rather than manually configuring each resource in the AWS Management Console.
+
+I also learned the importance of correctly defining resource properties, references, and dependencies within CloudFormation templates.
+
+## 2. EC2 Auto Scaling
+
+I developed a better understanding of how EC2 Auto Scaling Groups manage EC2 instances.
+
+Through this project, I configured an Auto Scaling Group with:
+
+* Minimum capacity: 1 instance
+* Desired capacity: 2 instances
+* Maximum capacity: 3 instances
+
+I learned how desired capacity determines the number of instances the Auto Scaling Group attempts to maintain, while minimum and maximum capacities establish its permitted scaling boundaries.
+
+I also gained experience verifying the number and health status of instances managed by an Auto Scaling Group.
+
+## 3. EC2 Launch Templates
+
+I learned how EC2 Launch Templates define the configuration used to launch EC2 instances.
+
+My CloudFormation template included a Launch Template specifying the EC2 instance type, Amazon Machine Image (AMI), security group configuration, and user data.
+
+The user data was configured to install and start an Apache HTTP server when an instance launched.
+
+This helped me understand how EC2 instances can be configured automatically during provisioning.
+
+## 4. YAML Configuration and Troubleshooting
+
+One of my biggest learning experiences was troubleshooting CloudFormation deployment failures.
+
+I encountered multiple issues involving YAML indentation, resource configuration, and differences between older training materials and the AWS environment I was using.
+
+Resolving these issues helped me develop a more systematic approach to troubleshooting.
+
+I learned the importance of reviewing errors, understanding resource configurations, making targeted changes, and testing deployments again.
+
+## 5. AWS CLI and Infrastructure Verification
+
+I gained further experience using the AWS CLI to inspect and verify deployed infrastructure.
+
+I used AWS CLI commands to:
+
+* Check the CloudFormation stack deployment status.
+* Inspect the EC2 Auto Scaling Group configuration.
+* Verify the number of EC2 instances in the Auto Scaling Group.
+* Confirm that instances were reporting InService and Healthy.
+* Check that the EC2 instances were in the running state.
+
+This reinforced the importance of verifying infrastructure after deployment rather than assuming that successful resource creation guarantees everything is functioning as expected.
+
+## 6. Infrastructure Lifecycle Management
+
+This project helped me understand the importance of managing AWS resources throughout their lifecycle.
+
+I gained experience with infrastructure deployment, configuration, verification, troubleshooting, and clean-up.
+
+Removing unnecessary AWS resources after completing practical exercises is also an important part of responsible cloud cost management.
+
+## 7. Developing a Cloud Engineering Mindset
+
+One of the most valuable lessons from this project was learning to approach infrastructure problems systematically.
+
+Rather than relying entirely on tutorials, I had to investigate deployment failures, understand configuration differences, and make changes to achieve a successful deployment.
+
+This experience helped me develop greater confidence in working with Infrastructure as Code and reinforced the importance of problem-solving, adaptability, and continuous learning in cloud engineering.
+
+
+- **Amazon CloudWatch:** Configured a CPU utilisation alarm to monitor when the CPU threshold exceeds 70%.
+- **EC2 Auto Scaling Policy:** Configured a scale-out policy to increase the Auto Scaling Group capacity by one instance when triggered by the CloudWatch alarm.
 
 
