@@ -35,7 +35,7 @@ The Auto Scaling Group was configured with:
 - **Availability Zones:** eu-west-2a and eu-west-2b
 
 
-Architecture Overview
+## Architecture Overview
 
 The infrastructure was designed to support a scalable web application across two AWS Availability Zones in the London region (eu-west-2).
 
@@ -43,7 +43,7 @@ An Application Load Balancer (ALB) distributes incoming HTTP traffic across EC2 
 
 The Auto Scaling Group maintains the configured number of EC2 instances and can adjust capacity within the defined minimum and maximum limits.
 
-How the Architecture Works
+## How the Architecture Works
 
 1. A user sends an HTTP request to the Application Load Balancer.
 2. The Application Load Balancer routes the request to a healthy EC2 instance in its target group.
@@ -51,7 +51,7 @@ How the Architecture Works
 4. The Auto Scaling Group maintains the desired number of instances and replaces unhealthy instances when required.
 5. The infrastructure uses two Availability Zones to improve resilience and reduce dependence on a single location.
 
-Scalability and High Availability
+## Scalability and High Availability
 
 The Auto Scaling Group was configured with a minimum capacity of one instance, a desired capacity of two instances, and a maximum capacity of three instances.
 
@@ -59,13 +59,13 @@ This configuration provides a foundation for scaling the application as demand c
 
 Distributing resources across two Availability Zones also helps improve availability by reducing the impact of an individual Availability Zone failure.
 
-Deployment Process
+## Deployment Process
 
 I used AWS CloudFormation to provision the infrastructure through Infrastructure as Code (IaC), rather than manually creating each resource in the AWS Management Console.
 
 The infrastructure was defined in a YAML template named asg.yaml, which describes the AWS resources and their configurations.
 
-1. Create the CloudFormation Template
+## 1. Create the CloudFormation Template
 
 I created a YAML template to define the infrastructure resources, including:
 
@@ -78,7 +78,7 @@ I created a YAML template to define the infrastructure resources, including:
 
 Using CloudFormation allowed me to define the infrastructure in code and deploy the resources as a stack.
 
-2. Deploy the Infrastructure
+## 2. Deploy the Infrastructure
 
 I used the AWS CLI to deploy the CloudFormation template.
 
@@ -86,7 +86,7 @@ CloudFormation processed the YAML template and created the resources defined wit
 
 This approach helped me practise automated infrastructure provisioning and understand how AWS resources can be managed together.
 
-3. Verify the Deployment
+## 3. Verify the Deployment
 
 After deployment, I used the AWS Management Console and AWS CLI to inspect the infrastructure.
 
@@ -94,7 +94,7 @@ I checked the CloudFormation stack status and reviewed the EC2 instances created
 
 I also inspected the Auto Scaling configuration to confirm the minimum, desired and maximum instance capacities.
 
-4. Clean Up AWS Resources
+## 4. Clean Up AWS Resources
 
 After completing the deployment and verification, I removed the infrastructure to avoid leaving unnecessary AWS resources running and generating additional charges.
 
@@ -104,13 +104,13 @@ Verification and Testing
 
 After deploying the infrastructure using AWS CloudFormation, I used the AWS Management Console and AWS CLI to inspect the resources and verify the deployment.
 
-1. CloudFormation Stack Verification
+## 1. CloudFormation Stack Verification
 
 I reviewed the CloudFormation stack to check its deployment status and confirm that the infrastructure resources had been provisioned.
 
 This helped me understand how CloudFormation manages resources as part of a single stack.
 
-2. EC2 Auto Scaling Group Verification
+## 2. EC2 Auto Scaling Group Verification
 
 I inspected the EC2 Auto Scaling Group to review its capacity configuration:
 
@@ -120,19 +120,19 @@ I inspected the EC2 Auto Scaling Group to review its capacity configuration:
 
 The desired capacity specifies how many instances the Auto Scaling Group attempts to maintain under normal conditions.
 
-3. EC2 Instance Verification
+## 3. EC2 Instance Verification
 
 I used the AWS CLI to inspect the EC2 instances associated with the deployment.
 
 This allowed me to review their operational status and practise verifying AWS resources from the command line.
 
-4. Application Load Balancer Verification
+## 4. Application Load Balancer Verification
 
 I reviewed the Application Load Balancer configuration and its relationship with the EC2 Auto Scaling Group.
 
 The load balancer was configured to distribute incoming HTTP traffic to registered targets.
 
-5. Infrastructure Clean-up
+## 5. Infrastructure Clean-up
 
 After completing the project, I removed the deployed infrastructure to avoid unnecessary AWS charges.
 
@@ -142,23 +142,72 @@ Deployment Screenshots
 
 The following screenshots show the CloudFormation deployment, Auto Scaling Group configuration and EC2 instance verification.
 
-1. CloudFormation Deployment
+## 1. CloudFormation Deployment
 
 This screenshot shows the CloudFormation stack deployment and the infrastructure resources created through the YAML template.
 
-2. Auto Scaling Group Configuration
+## 2. Auto Scaling Group Configuration
 
 This screenshot demonstrates the Auto Scaling Group configuration, including the minimum, desired and maximum instance capacities.
 
-3. EC2 Instance Health
+## 3. EC2 Instance Health
 
 This screenshot shows the EC2 instances registered with the Auto Scaling Group and their health status.
 
 Both instances were confirmed as InService and Healthy.
 
-4. CloudFormation YAML Configuration
+## 4. CloudFormation YAML Configuration
 
 This screenshot highlights the CloudFormation configuration used to define the EC2 Launch Template and Auto Scaling Group.
+
+
+
+## Deployment Screenshots
+
+The following screenshots provide evidence of the CloudFormation deployment, EC2 Auto Scaling configuration, and infrastructure verification using the AWS CLI.
+
+### 1. CloudFormation Template and Configuration
+
+The CloudFormation YAML template defines the EC2 Launch Template and Auto Scaling Group.
+
+The Auto Scaling Group was configured with a minimum capacity of one instance, a desired capacity of two instances, and a maximum capacity of three instances.
+
+The terminal output also confirms that the CloudFormation stack reached `CREATE_COMPLETE`.
+
+![CloudFormation YAML Template](screenshots/WhatsApp%20Image%202026-10-23%20at%2015.46.09.jpeg)
+
+### 2. CloudFormation Deployment Verification
+
+After deploying the infrastructure, I used the AWS CLI to verify the CloudFormation stack status.
+
+The stack reached `CREATE_COMPLETE`, confirming that the infrastructure was successfully provisioned.
+
+I also queried the Auto Scaling Group and confirmed that its desired capacity was two instances, with two instances present.
+
+![CloudFormation Deployment Verification](screenshots/2.jpeg)
+
+### 3. Auto Scaling Instance Health Verification
+
+I used the AWS CLI to inspect the instances managed by the Auto Scaling Group.
+
+The command output confirmed that both EC2 instances were:
+
+- In the `InService` lifecycle state.
+- Reporting a `Healthy` health status.
+
+This demonstrated that the Auto Scaling Group had successfully provisioned and registered its two instances.
+
+![Auto Scaling Instance Health Verification](screenshots/3.jpeg)
+
+### 4. EC2 Instance Verification
+
+I used the AWS CLI to retrieve information about the EC2 instances created by the CloudFormation stack.
+
+The command output confirmed that both instances were in the `running` state and displayed their assigned public IP addresses.
+
+This provided additional verification that the EC2 instances had been successfully provisioned.
+
+![EC2 Instance Verification](screenshots/4.jpeg)
 
 
 
